@@ -198,7 +198,10 @@ def do_smiles2png(smiles_fname: List[str],
   for line in lines:
     f = line.split(' ') # pylint: disable=invalid-name
     mols.append(Chem.MolFromSmiles(f[0]))
-    mols[-1].SetProp("_Name", f[1])
+    if len(f) > 1:
+      mols[-1].SetProp(UNAME, f[1])
+    else:
+      mols[-1].SetProp(UNAME, "")
 
   if config.verbose:
     print(f"Generating plots for {len(mols)} molecules", file=sys.stderr)
@@ -234,7 +237,7 @@ def generate_png_stem(fnames: List[str],
   Returns:
     file name stem for png files.
   """
-  if len(smiles_on_command_line) > 0 or fnames[0] == '-':
+  if smiles_on_command_line or fnames[0] == '-':
     result =  f"/tmp/smi2png{os.getpid()}"
   else:
     result = re.sub(r'.smi$', "", fnames[0])
