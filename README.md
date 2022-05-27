@@ -4,6 +4,10 @@ Trivial smiles viewer. Uses RDKit to generate a .png depiction, which is sent to
 This is for use at the Linux command line when you want to see a depiction
 of the smiles in a file.
 
+External dependencies are
++ [RDKit](http://rdkit.org/)
++ [Abseil Python Common Libraries](https://pypi.org/project/absl-py/)
++ [Eye of Gnome (eog)](https://wiki.gnome.org/Apps/EyeOfGnome)
 # Usage
 
 ```
