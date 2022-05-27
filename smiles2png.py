@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """ Given a smiles file, create a set of .png files which are sent to eog."""
 
 from dataclasses import dataclass
