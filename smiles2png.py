@@ -26,6 +26,9 @@ flags.DEFINE_integer("n", 30, "Number of smiles to process")
 flags.DEFINE_integer("mols_per_row", 1,
                      "Generate a grid plot with this many molecules per row")
 flags.DEFINE_integer("nrows", 1, "Number of rows on each page")
+flags.DEFINE_integer("smiles_col", 1, "The column in which the smiles is found")
+flags.DEFINE_integer("id_col", 2, "The column in which the identifier is found")
+flags.DEFINE_string("sep", ' ', "Input file token separator")
 flags.DEFINE_integer("x", 300, "Image size X")
 flags.DEFINE_integer("y", 300, "Image size Y")
 flags.DEFINE_boolean("keep", False, "Keep the underlying .png file(s)")
@@ -44,6 +47,11 @@ class Smiles2PngConfig:
     plot_x: int = 300
     plot_y: int = 300
     align: Optional[List[Chem.RWMol]] = None
+    # The columns where we find the smiles and the identifier.
+    smiles_col: int = 0
+    id_col: int = 1
+    input_separator: str = ' '
+
     keep_png: bool = False
     verbose: bool = False
 
@@ -206,10 +214,10 @@ def do_smiles2png(smiles_fname: List[str],
 
     mols = []
     for line in lines:
-        f = line.split(' ')  # pylint: disable=invalid-name
-        mols.append(Chem.MolFromSmiles(f[0]))
+        f = line.split(config.input_separator)  # pylint: disable=invalid-name
+        mols.append(Chem.MolFromSmiles(f[config.smiles_col]))
         if len(f) > 1:
-            mols[-1].SetProp(UNAME, f[1])
+            mols[-1].SetProp(UNAME, f[config.id_col])
         else:
             mols[-1].SetProp(UNAME, "")
 
@@ -286,6 +294,11 @@ def smiles2png(argv):
     config.plot_y = FLAGS.y
     config.keep_png = FLAGS.keep
     config.verbose = FLAGS.verbose
+
+    # convert human column numbers to array indices.
+    config.smiles_col = FLAGS.smiles_col - 1
+    config.id_col = FLAGS.id_col - 1
+    config.input_separator = FLAGS.sep
 
     if png_stem:
         config.keep_png = True

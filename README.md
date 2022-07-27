@@ -41,6 +41,12 @@ smiles strings are passed from the command line.
 
 - x and -y: dimensions of the .png
 
+- smiles_col: the column in which the smiles is found (def 1)
+
+- id_col: the column in which the name is found (def 2)
+
+- sep: the column separator in the input file (def space)
+
 - stem: File name stem for the .png files generated.
 
 - verbose: verbose output
