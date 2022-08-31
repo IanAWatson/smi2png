@@ -23,6 +23,7 @@ flags.DEFINE_multi_string("smiles", None, "Individual smiles to depict")
 flags.DEFINE_multi_string("align", None, "Smiles of structure to align")
 flags.DEFINE_string("stem", None, "File name stem for .png files created")
 flags.DEFINE_integer("n", 30, "Number of smiles to process")
+flags.DEFINE_integer("f", 0, "Skip the first <n> records")
 flags.DEFINE_integer("mols_per_row", 1,
                      "Generate a grid plot with this many molecules per row")
 flags.DEFINE_integer("nrows", 1, "Number of rows on each page")
@@ -41,6 +42,7 @@ UNAME = "_Name"
 class Smiles2PngConfig:
     # pylint: disable=too-many-instance-attributes
     """Configurable parameters for plotting."""
+    skip_first: int = 0
     nplot: int = 30
     mols_per_row: int = 1
     rows_per_page: int = 1
@@ -101,6 +103,8 @@ def generate_plots_grid(mols: List[Chem.rdchem.Mol], png_stem: str,
         ids = [m.GetProp(UNAME) for m in gridmols]
         png = Draw.MolsToGridImage(gridmols,
                                    molsPerRow=config.mols_per_row,
+                                   # subImgSize requires fairly recent rdkit
+                                   subImgSize=(config.plot_x, config.plot_y),
                                    legends=ids,
                                    returnPNG=True)
         png_fname = f"{png_stem}{ndx}.png"
@@ -167,11 +171,15 @@ def read_smiles(input_stream, lines: List[str],
 
   Stop reading if/when config.nplot is reached.
   Args:
-    input_stream:
-    lines:
+    input_stream: source of data.
+    lines: lines read are appended here.
   Returns:
     length(lines)
   """
+    if config.skip_first > 0:
+      for _ in range(0, config.skip_first):
+        input_stream.readline()
+
     for line in input_stream:
         lines.append(line.rstrip())
         if len(lines) >= config.nplot:
@@ -288,6 +296,7 @@ def smiles2png(argv):
     smiles_on_command_line: Optional[List[str]] = FLAGS.smiles
 
     config.nplot = FLAGS.n
+    config.skip_first = FLAGS.f
     config.mols_per_row = FLAGS.mols_per_row
     config.rows_per_page = FLAGS.nrows
     config.plot_x = FLAGS.x

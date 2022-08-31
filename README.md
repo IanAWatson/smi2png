@@ -29,13 +29,15 @@ smiles strings are passed from the command line.
 
 - input: Name of smiles file(s) - or use positional arguments (argv)
 
-- smiles: Smiles to be depicted
+- smiles: Smiles to be depicted, can be repeated.
 
 - n: Number of molecules to display - default 30.
 
+- f: If specified, skips the first `f` records in the input.
+
 - align: A smiles that is used for aligning the structures.
 
-- mols_per_row: number of molecules per row.
+- mols_per_row: number of molecules per row (number of columns).
 
 - nrows: number of rows per .png file
 
