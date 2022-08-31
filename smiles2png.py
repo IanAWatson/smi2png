@@ -193,6 +193,11 @@ def get_smiles(smiles_fname: str, lines: List[str],
     """Wrapper for read_smiles depending on `smiles_fname`."""
     if smiles_fname == '-':
         return read_smiles(sys.stdin, lines, config)
+
+    # If the file does not exist, try adding a suffix.
+    if not os.path.exists(smiles_fname) and os.path.exists(smiles_fname + ".smi"):
+      smiles_fname += ".smi"
+
     with open(smiles_fname, "r") as input_stream:
         return read_smiles(input_stream, lines, config)
 
