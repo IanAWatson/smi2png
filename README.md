@@ -45,7 +45,7 @@ smiles strings are passed from the command line.
 
 - smiles_col: the column in which the smiles is found (def 1)
 
-- id_col: the column in which the name is found (def 2)
+- id_col: list of columns in which the name is found (def 2)
 
 - sep: the column separator in the input file (def space)
 
@@ -54,3 +54,13 @@ smiles strings are passed from the command line.
 - verbose: verbose output
 
 - keep: Do NOT remove the .png files after they are shown in `eog`.
+
+Note that id_col can be a csv list of columns, so if you want to show columns 2 and 3
+from a smiles file together with each structure, add `--id_col 2,3`.
+
+Note too that input can be read from sys.stdin. So if you wish to view a particular
+record(s) from a smiles file, that can be done with something like
+```
+grep -E '(CHEMBL224048|CHEMBL449036)' somefile.smi | smiles2png <options> --input -
+```
+where `-` is used to signify use of stdin.
