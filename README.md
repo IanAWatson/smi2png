@@ -1,9 +1,10 @@
 # smi2png
 
-Trivial smiles viewer. Uses RDKit to generate a .png depiction, which is sent to eog for viewing.
+Trivial smiles viewer. Uses RDKit to generate a .png depiction, which is sent
+to eog for viewing.
 
-This is for use at the Linux command line when you want to see a depiction
-of the smiles in a file.
+This is for use at the Linux command line when you want to see a depiction of
+the smiles in a file.
 
 External dependencies are
 + [RDKit](http://rdkit.org/)
@@ -57,12 +58,13 @@ smiles strings are passed from the command line.
 
 - keep: Do NOT remove the .png files after they are shown in `eog`.
 
-Note that id_col can be a csv list of columns, so if you want to show columns 2 and 3
-from a smiles file together with each structure, add `--id_col 2,3`.
+Note that id_col can be a csv list of columns, so if you want to show columns 2
+and 3 from a smiles file together with each structure, add `--id_col 2,3`.
 
-Note too that input can be read from sys.stdin. So if you wish to view a particular
-record(s) from a smiles file, that can be done with something like
+Note too that input can be read from sys.stdin. So if you wish to view a
+particular record(s) from a smiles file, that can be done with something like
 ```
-grep -E '(CHEMBL224048|CHEMBL449036)' somefile.smi | smiles2png <options> --input -
+grep -E '(CHEMBL224048|CHEMBL449036)' somefile.smi | smiles2png <options>
+--input -
 ```
 where `-` is used to signify use of stdin.
