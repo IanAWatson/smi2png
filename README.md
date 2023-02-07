@@ -7,6 +7,7 @@ This is for use at the Linux command line when you want to see a depiction of
 the smiles in a file.
 
 External dependencies are
+
 + [RDKit](http://rdkit.org/)
 + [Abseil Python Common Libraries](https://pypi.org/project/absl-py/)
 + [Eye of Gnome (eog)](https://wiki.gnome.org/Apps/EyeOfGnome)
@@ -16,16 +17,19 @@ External dependencies are
 ```
 smiles2png file.smi
 ```
+
 converts the first 30 structures in `file.smi` to png and sends to `eog`.
 
 ```
 smiles2png -
 ```
+
 converts the first 30 structures in stdin to png and sends to `eog`.
 
 ```
 smiles2png --smiles 'CN1C=NC2=C1C(=O)N(C(=O)N2C)C caffeine' --smiles 'c1ccccc1 benzene'
 ```
+
 smiles strings are passed from the command line.
 
 ## Options
@@ -63,8 +67,10 @@ and 3 from a smiles file together with each structure, add `--id_col 2,3`.
 
 Note too that input can be read from sys.stdin. So if you wish to view a
 particular record(s) from a smiles file, that can be done with something like
+
 ```
 grep -E '(CHEMBL224048|CHEMBL449036)' somefile.smi | smiles2png <options>
 --input -
 ```
+
 where `-` is used to signify use of stdin.
