@@ -34,33 +34,33 @@ smiles strings are passed from the command line.
 
 ## Options
 
-- input: Name of smiles file(s) - or use positional arguments (argv)
++ input: Name of smiles file(s) - or use positional arguments (argv)
 
-- smiles: Smiles to be depicted, can be repeated.
++ smiles: Smiles to be depicted, can be repeated.
 
-- n: Number of molecules to display - default 30.
++ n: Number of molecules to display - default 30.
 
-- f: If specified, skips the first `f` records in the input.
++ f: If specified, skips the first `f` records in the input.
 
-- align: A smiles that is used for aligning the structures.
++ align: A smiles that is used for aligning the structures.
 
-- mols_per_row: number of molecules per row (number of columns).
++ mols_per_row: number of molecules per row (number of columns).
 
-- nrows: number of rows per .png file
++ nrows: number of rows per .png file
 
-- x and -y: dimensions of the .png
++ x and -y: dimensions of the .png
 
-- smiles_col: the column in which the smiles is found (def 1)
++ smiles_col: the column in which the smiles is found (def 1)
 
-- id_col: list of columns in which the name is found (def 2)
++ id_col: list of columns in which the name is found (def 2)
 
-- sep: the column separator in the input file (def space)
++ sep: the column separator in the input file (def space)
 
-- stem: File name stem for the .png files generated.
++ stem: File name stem for the .png files generated.
 
-- verbose: verbose output
++ verbose: verbose output
 
-- keep: Do NOT remove the .png files after they are shown in `eog`.
++ keep: Do NOT remove the .png files after they are shown in `eog`.
 
 Note that id_col can be a csv list of columns, so if you want to show columns 2
 and 3 from a smiles file together with each structure, add `--id_col 2,3`.
