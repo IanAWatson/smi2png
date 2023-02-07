@@ -12,7 +12,7 @@ External dependencies are
 + [Abseil Python Common Libraries](https://pypi.org/project/absl-py/)
 + [Eye of Gnome (eog)](https://wiki.gnome.org/Apps/EyeOfGnome)
 
-# Usage
+## Usage
 
 ```
 smiles2png file.smi
@@ -32,7 +32,7 @@ smiles2png --smiles 'CN1C=NC2=C1C(=O)N(C(=O)N2C)C caffeine' --smiles 'c1ccccc1 b
 
 smiles strings are passed from the command line.
 
-## Options
+### Options
 
 + input: Name of smiles file(s) - or use positional arguments (argv)
 + smiles: Smiles to be depicted, can be repeated.
