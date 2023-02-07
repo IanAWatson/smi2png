@@ -56,8 +56,7 @@ Note too that input can be read from sys.stdin. So if you wish to view a
 particular record(s) from a smiles file, that can be done with something like
 
 ```
-grep -E '(CHEMBL224048|CHEMBL449036)' somefile.smi | smiles2png <options>
---input -
+grep -E '(CHEMBL224048|CHEMBL449036)' somefile.smi | smiles2png <options> --input -
 ```
 
 where `-` is used to signify use of stdin.
