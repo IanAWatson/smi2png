@@ -302,12 +302,6 @@ def smiles2png(argv):
     png_stem = FLAGS.stem
 
     config = Smiles2PngConfig()
-    if FLAGS.align is not None:
-        config.align = [Chem.MolFromSmiles(smi, sanitize=config.sanitize) for smi in FLAGS.align]
-        for mol in config.align:
-            AllChem.Compute2DCoords(mol)
-
-    smiles_on_command_line: Optional[List[str]] = FLAGS.smiles
 
     config.sanitize = FLAGS.sanitize
     config.nplot = FLAGS.n
@@ -319,6 +313,13 @@ def smiles2png(argv):
     config.add_name = not FLAGS.noname
     config.keep_png = FLAGS.keep
     config.verbose = FLAGS.verbose
+
+    if FLAGS.align is not None:
+        config.align = [Chem.MolFromSmiles(smi, sanitize=config.sanitize) for smi in FLAGS.align]
+        for mol in config.align:
+            AllChem.Compute2DCoords(mol)
+
+    smiles_on_command_line: Optional[List[str]] = FLAGS.smiles
 
     # convert human column numbers to array indices.
     config.smiles_col = FLAGS.smiles_col - 1
