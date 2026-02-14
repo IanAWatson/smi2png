@@ -29,6 +29,7 @@ flags.DEFINE_integer("mols_per_row", 1,
 flags.DEFINE_integer("nrows", 1, "Number of rows on each page")
 flags.DEFINE_integer("smiles_col", 1, "The column in which the smiles is found")
 flags.DEFINE_list("id_col", ['2'], "The column(s) in which the identifier is found")
+flags.DEFINE_boolean("sanitize", True, "call MolFromSmiles with sanitize")
 flags.DEFINE_string("sep", ' ', "Input file token separator")
 flags.DEFINE_integer("x", 300, "Image size X")
 flags.DEFINE_integer("y", 300, "Image size Y")
@@ -53,6 +54,7 @@ class Smiles2PngConfig:
     # The columns where we find the smiles and the identifier.
     smiles_col: int = 0
     id_col: List = field(default_factory=lambda: ['2']) 
+    sanitize: bool = True
     input_separator: str = ' '
     add_name: bool = True
 
@@ -231,7 +233,7 @@ def do_smiles2png(smiles_fname: List[str],
     mols = []
     for line in lines:
         f = line.split(config.input_separator)  # pylint: disable=invalid-name
-        mols.append(Chem.MolFromSmiles(f[config.smiles_col]))
+        mols.append(Chem.MolFromSmiles(f[config.smiles_col], sanitize=config.sanitize))
         if len(f) > 1:
             mols[-1].SetProp(UNAME, ' '.join([f[c] for c in config.id_col]))
         else:
@@ -285,6 +287,10 @@ def generate_png_stem(fnames: List[str],
 def smiles2png(argv):
     """Generate png from smiles using RDKit"""
 
+    if len(argv) == 1:
+      logging.error("Must specify smiles file as argument. try smiles2png --help")
+      return 1
+
     smiles_fname = []
 
     # Currently these are mutually exclusive...
@@ -297,12 +303,13 @@ def smiles2png(argv):
 
     config = Smiles2PngConfig()
     if FLAGS.align is not None:
-        config.align = [Chem.MolFromSmiles(smi) for smi in FLAGS.align]
+        config.align = [Chem.MolFromSmiles(smi, sanitize=config.sanitize) for smi in FLAGS.align]
         for mol in config.align:
             AllChem.Compute2DCoords(mol)
 
     smiles_on_command_line: Optional[List[str]] = FLAGS.smiles
 
+    config.sanitize = FLAGS.sanitize
     config.nplot = FLAGS.n
     config.skip_first = FLAGS.f
     config.mols_per_row = FLAGS.mols_per_row
