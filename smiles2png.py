@@ -15,6 +15,7 @@ from absl import logging
 from rdkit import Chem
 from rdkit.Chem import AllChem
 from rdkit.Chem import Draw
+from rdkit.Chem.Draw import rdMolDraw2D
 
 FLAGS = flags.FLAGS
 
@@ -33,6 +34,7 @@ flags.DEFINE_boolean("sanitize", True, "call MolFromSmiles with sanitize")
 flags.DEFINE_string("sep", ' ', "Input file token separator")
 flags.DEFINE_integer("x", 300, "Image size X")
 flags.DEFINE_integer("y", 300, "Image size Y")
+flags.DEFINE_string("format", "png", "Kind of image file to write, default 'png'")
 flags.DEFINE_boolean("noname", False, "Do NOT include the molecule name with the plot")
 flags.DEFINE_boolean("keep", False, "Keep the underlying .png file(s)")
 flags.DEFINE_boolean("verbose", False, "Verbose output")
@@ -59,6 +61,7 @@ class Smiles2PngConfig:
     add_name: bool = True
 
     keep_png: bool = False
+    output_format: bool = False
     verbose: bool = False
 
 # pylint: disable=line-too-long
@@ -120,6 +123,37 @@ def generate_plots_grid(mols: List[Chem.rdchem.Mol], png_stem: str,
     return pngs
 
 
+def generate_plots_svg(mols: List[Chem.rdchem.Mol], output_stem: str,
+                       config: Smiles2PngConfig) -> List[str]:
+    """Generate single molecule at a time plots of the molecules in `mols`.
+
+  Args:
+    mols:
+    output_stem: used for generating .svg files
+    config:
+  Returns:
+    A list of the .svg files produced.
+  """
+    files: List[str] = []  # to be returned.
+    for (ndx, mol) in enumerate(mols):
+        if len(mols) == 1:
+            fname = f"{output_stem}.svg"
+        else:
+            fname = f"{output_stem}{ndx}.svg"
+        if config.verbose:
+            print(f"Drawing plot for {Chem.MolToSmiles(mol)}")
+
+        drawer = rdMolDraw2D.MolDraw2DSVG(450, 400)
+        drawer.DrawMolecule(mol)
+        drawer.FinishDrawing()
+        svg_text = drawer.GetDrawingText()
+        with open(fname, "w") as output:
+          output.write(svg_text)
+
+        files.append(fname)
+
+    return files
+
 def generate_plots(mols: List[Chem.rdchem.Mol], png_stem: str,
                    config: Smiles2PngConfig) -> List[str]:
     """Generate single molecule at a time plots of the molecules in `mols`.
@@ -131,6 +165,9 @@ def generate_plots(mols: List[Chem.rdchem.Mol], png_stem: str,
   Returns:
     A list of the .png files produced.
   """
+    if config.output_format == "svg":
+      return generate_plots_svg(mols, png_stem, config)
+
     pngs: List[str] = []  # to be returned.
     for (ndx, mol) in enumerate(mols):
         if len(mols) == 1:
@@ -139,6 +176,7 @@ def generate_plots(mols: List[Chem.rdchem.Mol], png_stem: str,
             png_fname = f"{png_stem}{ndx}.png"
         if config.verbose:
             print(f"Drawing plot for {Chem.MolToSmiles(mol)}")
+
         Draw.MolToFile(mol,
                        png_fname,
                        size=(config.plot_x, config.plot_y),
@@ -311,6 +349,7 @@ def smiles2png(argv):
     config.plot_x = FLAGS.x
     config.plot_y = FLAGS.y
     config.add_name = not FLAGS.noname
+    config.output_format = FLAGS.format
     config.keep_png = FLAGS.keep
     config.verbose = FLAGS.verbose
 
